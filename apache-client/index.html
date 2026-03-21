@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Application Design Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" defer src="js/config.js"></script>
+  <script type="module" defer src="js/app.js"></script>
+</head>
+<body>
+  <div class="background-orb orb-a"></div>
+  <div class="background-orb orb-b"></div>
+
+  <main class="layout">
+    <section class="hero card reveal">
+      <p class="kicker">Enterprise Architecture Workshop</p>
+      <h1>Secure Application Design</h1>
+      <p>
+        Asynchronous client served by Apache with secure authentication against the Spring API over TLS.
+      </p>
+      <div class="status-row">
+        <span id="apiStatus" class="status-chip">API status: checking...</span>
+      </div>
+    </section>
+
+    <section class="forms-grid reveal delay-1">
+      <article class="card">
+        <h2>Register</h2>
+        <form id="registerForm" class="stack">
+          <label>Email
+            <input type="email" id="registerEmail" required placeholder="you@example.com">
+          </label>
+          <label>Password
+            <input type="password" id="registerPassword" required minlength="8" placeholder="At least 8 characters">
+          </label>
+          <button type="submit">Create secure account</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Login</h2>
+        <form id="loginForm" class="stack">
+          <label>Email
+            <input type="email" id="loginEmail" required placeholder="you@example.com">
+          </label>
+          <label>Password
+            <input type="password" id="loginPassword" required minlength="8" placeholder="Your password">
+          </label>
+          <button type="submit">Sign in</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="card reveal delay-2">
+      <h2>Protected area</h2>
+      <div class="actions">
+        <button id="btnMe" type="button">Call /api/secure/me</button>
+        <button id="btnLogout" type="button" class="secondary">Sign out</button>
+      </div>
+      <pre id="output" aria-live="polite">Waiting for actions...</pre>
+    </section>
+  </main>
+</body>
+</html>
