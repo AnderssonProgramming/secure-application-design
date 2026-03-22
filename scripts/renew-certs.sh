@@ -13,15 +13,22 @@ KEYSTORE_PATH="$3"
 
 sudo certbot renew --quiet
 
-openssl pkcs12 -export \
+sudo openssl pkcs12 -export \
   -in "/etc/letsencrypt/live/${API_DOMAIN}/fullchain.pem" \
   -inkey "/etc/letsencrypt/live/${API_DOMAIN}/privkey.pem" \
   -out "${KEYSTORE_PATH}" \
   -name spring \
   -passout pass:"${KEYSTORE_PASSWORD}"
 
-chmod 600 "${KEYSTORE_PATH}"
-sudo systemctl reload httpd || true
-sudo systemctl restart secure-api || true
+sudo chown ec2-user:ec2-user "${KEYSTORE_PATH}"
+sudo chmod 600 "${KEYSTORE_PATH}"
+
+if systemctl list-unit-files httpd.service --no-pager | grep -q "httpd.service"; then
+  sudo systemctl reload httpd || true
+fi
+
+if systemctl list-unit-files secure-api.service --no-pager | grep -q "secure-api.service"; then
+  sudo systemctl restart secure-api || true
+fi
 
 echo "Certificates renewed and services reloaded"

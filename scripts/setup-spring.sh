@@ -41,7 +41,9 @@ pushd "${APP_DIR}" > /dev/null
 mvn clean package
 popd > /dev/null
 
-sudo systemctl stop secure-api || true
+if systemctl list-unit-files secure-api.service --no-pager | grep -q "secure-api.service"; then
+  sudo systemctl stop secure-api || true
+fi
 sudo certbot certonly --standalone -d "${API_DOMAIN}" --non-interactive --agree-tos -m "admin@${API_DOMAIN}"
 
 openssl pkcs12 -export \
