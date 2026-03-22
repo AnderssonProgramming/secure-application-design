@@ -9,6 +9,18 @@ This guide is the operational runbook for deploying the lab in AWS and capturing
 - Frontend origin: <https://ec2-54-82-9-48.compute-1.amazonaws.com>
 - API origin: <https://ec2-34-233-121-121.compute-1.amazonaws.com>
 
+## Deployment Values (DuckDNS)
+
+- Apache domain: apache-ander.duckdns.org
+- Spring domain: spring-ander.duckdns.org
+- Frontend origin: <https://apache-ander.duckdns.org>
+- API origin: <https://spring-ander.duckdns.org>
+
+Parameter rule:
+
+- For `<FRONTEND_DOMAIN>` and `<API_DOMAIN>`, pass only the hostname (no `http://` or `https://`).
+- For `<FRONTEND_ORIGIN>` and `<API_ORIGIN>`, pass a full URL origin (the scripts normalize to HTTPS automatically).
+
 Important:
 
 - Let's Encrypt will not issue certificates for AWS EC2 public hostnames like `*.compute-1.amazonaws.com` (forbidden by CA policy).
@@ -45,6 +57,12 @@ Exact command for your current domain:
 ./scripts/setup-apache.sh ec2-54-82-9-48.compute-1.amazonaws.com https://ec2-34-233-121-121.compute-1.amazonaws.com
 ```
 
+Exact command for DuckDNS:
+
+```bash
+./scripts/setup-apache.sh apache-ander.duckdns.org https://spring-ander.duckdns.org
+```
+
 Validation:
 
 ```bash
@@ -68,6 +86,12 @@ Exact command for your current domain:
 ./scripts/setup-spring.sh ec2-34-233-121-121.compute-1.amazonaws.com https://ec2-54-82-9-48.compute-1.amazonaws.com YOUR_KEYSTORE_PASSWORD
 ```
 
+Exact command for DuckDNS:
+
+```bash
+./scripts/setup-spring.sh spring-ander.duckdns.org https://apache-ander.duckdns.org YOUR_KEYSTORE_PASSWORD
+```
+
 Validation:
 
 ```bash
@@ -89,9 +113,15 @@ Exact renewal command for your current domain:
 ./scripts/renew-certs.sh ec2-34-233-121-121.compute-1.amazonaws.com YOUR_KEYSTORE_PASSWORD /home/ec2-user/keystore.p12
 ```
 
+Exact renewal command for DuckDNS:
+
+```bash
+./scripts/renew-certs.sh spring-ander.duckdns.org YOUR_KEYSTORE_PASSWORD /home/ec2-user/keystore.p12
+```
+
 ## 5) Functional Validation Flow
 
-1. Open <https://ec2-54-82-9-48.compute-1.amazonaws.com>.
+1. Open <https://apache-ander.duckdns.org>.
 2. Register a user.
 3. Login with the same user.
 4. Call /api/secure/me from the UI.

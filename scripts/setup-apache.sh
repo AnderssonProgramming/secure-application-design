@@ -7,10 +7,20 @@ if [[ $# -lt 2 ]]; then
   exit 1
 fi
 
-FRONTEND_DOMAIN="$1"
-API_ORIGIN="$2"
+FRONTEND_DOMAIN_RAW="$1"
+API_ORIGIN_RAW="$2"
 PROJECT_DIR="${HOME}/secure-application-design"
 WEB_ROOT="/var/www/secure-app"
+
+# Normalize inputs so users can paste values with or without scheme.
+FRONTEND_DOMAIN="${FRONTEND_DOMAIN_RAW#http://}"
+FRONTEND_DOMAIN="${FRONTEND_DOMAIN#https://}"
+FRONTEND_DOMAIN="${FRONTEND_DOMAIN%%/*}"
+
+API_HOST="${API_ORIGIN_RAW#http://}"
+API_HOST="${API_HOST#https://}"
+API_HOST="${API_HOST%%/*}"
+API_ORIGIN="https://${API_HOST}"
 
 if [[ "${FRONTEND_DOMAIN}" == *.compute.amazonaws.com || "${FRONTEND_DOMAIN}" == *.compute-1.amazonaws.com ]]; then
   echo "ERROR: Let's Encrypt cannot issue certificates for AWS EC2 public hostnames (${FRONTEND_DOMAIN})."
@@ -29,6 +39,7 @@ sudo mkdir -p "${WEB_ROOT}"
 sudo cp -r "${PROJECT_DIR}/apache-client/." "${WEB_ROOT}/"
 sudo sed -i "s|https://api.tudominio.com|${API_ORIGIN}|g" "${WEB_ROOT}/js/config.js"
 sudo sed -i "s|https://api.example.com|${API_ORIGIN}|g" "${WEB_ROOT}/js/config.js"
+sudo sed -i "s|http://api.example.com|${API_ORIGIN}|g" "${WEB_ROOT}/js/config.js"
 
 sudo tee /etc/httpd/conf.d/secure-app.conf > /dev/null <<EOF
 <VirtualHost *:80>

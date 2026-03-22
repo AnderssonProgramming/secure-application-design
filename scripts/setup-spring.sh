@@ -7,12 +7,22 @@ if [[ $# -lt 3 ]]; then
   exit 1
 fi
 
-API_DOMAIN="$1"
-FRONTEND_ORIGIN="$2"
+API_DOMAIN_RAW="$1"
+FRONTEND_ORIGIN_RAW="$2"
 KEYSTORE_PASSWORD="$3"
 PROJECT_DIR="${HOME}/secure-application-design"
 APP_DIR="${PROJECT_DIR}/spring-api"
 KEYSTORE_PATH="${HOME}/keystore.p12"
+
+# Normalize inputs so users can pass hostnames with or without scheme.
+API_DOMAIN="${API_DOMAIN_RAW#http://}"
+API_DOMAIN="${API_DOMAIN#https://}"
+API_DOMAIN="${API_DOMAIN%%/*}"
+
+FRONTEND_HOST="${FRONTEND_ORIGIN_RAW#http://}"
+FRONTEND_HOST="${FRONTEND_HOST#https://}"
+FRONTEND_HOST="${FRONTEND_HOST%%/*}"
+FRONTEND_ORIGIN="https://${FRONTEND_HOST}"
 
 if [[ "${API_DOMAIN}" == *.compute.amazonaws.com || "${API_DOMAIN}" == *.compute-1.amazonaws.com ]]; then
   echo "ERROR: Let's Encrypt cannot issue certificates for AWS EC2 public hostnames (${API_DOMAIN})."
