@@ -22,6 +22,7 @@ fi
 sudo mkdir -p "${WEB_ROOT}"
 sudo cp -r "${PROJECT_DIR}/apache-client/." "${WEB_ROOT}/"
 sudo sed -i "s|https://api.tudominio.com|${API_ORIGIN}|g" "${WEB_ROOT}/js/config.js"
+sudo sed -i "s|https://api.example.com|${API_ORIGIN}|g" "${WEB_ROOT}/js/config.js"
 
 sudo tee /etc/httpd/conf.d/secure-app.conf > /dev/null <<EOF
 <VirtualHost *:80>

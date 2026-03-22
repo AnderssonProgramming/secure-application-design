@@ -244,4 +244,4 @@ secure-application-design/
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. You can find it here [LICENSE](LICENSE)

@@ -2,6 +2,17 @@
 
 This guide is the operational runbook for deploying the lab in AWS and capturing the required evidence.
 
+## Deployment Values (Current)
+
+- Apache domain: ec2-54-82-9-48.compute-1.amazonaws.com
+- Spring domain: ec2-34-233-121-121.compute-1.amazonaws.com
+- Frontend origin: https://ec2-54-82-9-48.compute-1.amazonaws.com
+- API origin: https://ec2-34-233-121-121.compute-1.amazonaws.com
+
+Important:
+
+- If Let's Encrypt fails for these `compute-1.amazonaws.com` hostnames (CAA/domain policy), use your own domain/subdomains and point them to the same EC2 instances.
+
 ## 1) Prerequisites
 
 1. Two EC2 instances (Amazon Linux 2023):
@@ -25,6 +36,12 @@ chmod +x scripts/setup-apache.sh
 ./scripts/setup-apache.sh frontend.yourdomain.com https://api.yourdomain.com
 ```
 
+Exact command for your current domain:
+
+```bash
+./scripts/setup-apache.sh ec2-54-82-9-48.compute-1.amazonaws.com https://ec2-34-233-121-121.compute-1.amazonaws.com
+```
+
 Validation:
 
 ```bash
@@ -42,6 +59,12 @@ chmod +x scripts/setup-spring.sh
 ./scripts/setup-spring.sh api.yourdomain.com https://frontend.yourdomain.com YOUR_KEYSTORE_PASSWORD
 ```
 
+Exact command for your current domain:
+
+```bash
+./scripts/setup-spring.sh ec2-34-233-121-121.compute-1.amazonaws.com https://ec2-54-82-9-48.compute-1.amazonaws.com YOUR_KEYSTORE_PASSWORD
+```
+
 Validation:
 
 ```bash
@@ -57,9 +80,15 @@ chmod +x scripts/renew-certs.sh
 sudo certbot renew --dry-run
 ```
 
+Exact renewal command for your current domain:
+
+```bash
+./scripts/renew-certs.sh ec2-34-233-121-121.compute-1.amazonaws.com YOUR_KEYSTORE_PASSWORD /home/ec2-user/keystore.p12
+```
+
 ## 5) Functional Validation Flow
 
-1. Open <https://frontend.yourdomain.com>.
+1. Open <https://ec2-54-82-9-48.compute-1.amazonaws.com>.
 2. Register a user.
 3. Login with the same user.
 4. Call /api/secure/me from the UI.
