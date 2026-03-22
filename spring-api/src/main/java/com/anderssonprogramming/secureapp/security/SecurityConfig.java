@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/actuator/health", "/api/public/**").permitAll()
+                    .requestMatchers("/", "/error", "/api/auth/**", "/actuator/health", "/api/public/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

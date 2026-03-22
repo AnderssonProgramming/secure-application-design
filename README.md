@@ -115,8 +115,7 @@ All screenshots will be stored in [images](images).
 | Login success | images/auth-02-login-success.png |
 | Login failure | images/auth-03-login-failed.png |
 | BCrypt hash proof | images/auth-04-db-password-hash.png |
-| Protected endpoint with token | images/api-01-protected-with-token.png |
-| Protected endpoint without token | images/api-02-protected-without-token.png |
+| Protected endpoint | images/api-01-protected-with-token.png |
 | Test suite passing | images/ci-01-tests-passing.png |
 
 ### Gallery Placeholders

@@ -142,6 +142,30 @@ Exact renewal command for DuckDNS:
 11. Login success
 12. Login failure
 13. BCrypt hash stored in DB
-14. Protected endpoint with token
-15. Protected endpoint without token
-16. Test suite passing
+14. Protected endpoint
+15. Test suite passing
+
+## 7) Troubleshooting: ERR_CONNECTION_REFUSED
+
+If the browser shows `ERR_CONNECTION_REFUSED` for `https://spring-ander.duckdns.org/api/...`, run this checklist on the Spring server:
+
+```bash
+sudo systemctl status secure-api --no-pager
+sudo journalctl -u secure-api -n 120 --no-pager
+sudo ss -tulpen | grep ':443'
+curl -vk https://localhost/api/public/health
+```
+
+Then verify network and DNS from your local machine:
+
+```bash
+nslookup spring-ander.duckdns.org
+curl -vk https://spring-ander.duckdns.org/api/public/health
+```
+
+Most common causes:
+
+1. `secure-api` is down due to Java runtime startup issues from file capabilities on the Java binary. Current script uses systemd capability settings instead.
+2. Spring Security Group does not allow inbound `443/tcp`.
+3. DuckDNS A record points to a different IP than the Spring instance.
+4. Service was created before fix; rerun setup script once to regenerate the systemd unit.

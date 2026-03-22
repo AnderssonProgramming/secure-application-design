@@ -9,7 +9,10 @@ fi
 
 FRONTEND_DOMAIN_RAW="$1"
 API_ORIGIN_RAW="$2"
-PROJECT_DIR="${HOME}/secure-application-design"
+
+# Resolve project directory from this script location so sudo does not redirect to /root paths.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+PROJECT_DIR="$(cd -- "${SCRIPT_DIR}/.." >/dev/null 2>&1 && pwd)"
 WEB_ROOT="/var/www/secure-app"
 
 # Normalize inputs so users can paste values with or without scheme.
@@ -31,8 +34,10 @@ fi
 sudo dnf update -y
 sudo dnf install -y httpd git certbot python3-certbot-apache
 
-if [[ ! -d "${PROJECT_DIR}" ]]; then
-  git clone https://github.com/AnderssonProgramming/secure-application-design.git "${PROJECT_DIR}"
+if [[ ! -d "${PROJECT_DIR}/apache-client" ]]; then
+  echo "ERROR: apache-client directory not found at ${PROJECT_DIR}/apache-client."
+  echo "Run this script from inside the cloned repository."
+  exit 3
 fi
 
 sudo mkdir -p "${WEB_ROOT}"
