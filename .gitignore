@@ -23,3 +23,4 @@ spring-api/data/
 
 # Local recordings / large evidence files
 *.mp4
+!secure-application-design.mp4
