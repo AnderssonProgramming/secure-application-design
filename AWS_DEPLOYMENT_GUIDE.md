@@ -6,12 +6,15 @@ This guide is the operational runbook for deploying the lab in AWS and capturing
 
 - Apache domain: ec2-54-82-9-48.compute-1.amazonaws.com
 - Spring domain: ec2-34-233-121-121.compute-1.amazonaws.com
-- Frontend origin: https://ec2-54-82-9-48.compute-1.amazonaws.com
-- API origin: https://ec2-34-233-121-121.compute-1.amazonaws.com
+- Frontend origin: <https://ec2-54-82-9-48.compute-1.amazonaws.com>
+- API origin: <https://ec2-34-233-121-121.compute-1.amazonaws.com>
 
 Important:
 
-- If Let's Encrypt fails for these `compute-1.amazonaws.com` hostnames (CAA/domain policy), use your own domain/subdomains and point them to the same EC2 instances.
+- Let's Encrypt will not issue certificates for AWS EC2 public hostnames like `*.compute-1.amazonaws.com` (forbidden by CA policy).
+- You must use domains you control and map them to your EC2 public IPs.
+- Recommended naming for frontend: frontend.yourdomain.com -> Apache EC2 public IP
+- Recommended naming for API: api.yourdomain.com -> Spring EC2 public IP
 
 ## 1) Prerequisites
 

@@ -14,6 +14,12 @@ PROJECT_DIR="${HOME}/secure-application-design"
 APP_DIR="${PROJECT_DIR}/spring-api"
 KEYSTORE_PATH="${HOME}/keystore.p12"
 
+if [[ "${API_DOMAIN}" == *.compute.amazonaws.com || "${API_DOMAIN}" == *.compute-1.amazonaws.com ]]; then
+  echo "ERROR: Let's Encrypt cannot issue certificates for AWS EC2 public hostnames (${API_DOMAIN})."
+  echo "Use a domain you control (for example api.yourdomain.com) and point its A record to this EC2 instance."
+  exit 2
+fi
+
 sudo dnf update -y
 sudo dnf install -y java-17-amazon-corretto-devel maven git certbot openssl
 

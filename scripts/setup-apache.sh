@@ -12,6 +12,12 @@ API_ORIGIN="$2"
 PROJECT_DIR="${HOME}/secure-application-design"
 WEB_ROOT="/var/www/secure-app"
 
+if [[ "${FRONTEND_DOMAIN}" == *.compute.amazonaws.com || "${FRONTEND_DOMAIN}" == *.compute-1.amazonaws.com ]]; then
+  echo "ERROR: Let's Encrypt cannot issue certificates for AWS EC2 public hostnames (${FRONTEND_DOMAIN})."
+  echo "Use a domain you control (for example frontend.yourdomain.com) and point its A record to this EC2 instance."
+  exit 2
+fi
+
 sudo dnf update -y
 sudo dnf install -y httpd git certbot python3-certbot-apache
 
