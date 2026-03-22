@@ -20,3 +20,6 @@ Thumbs.db
 
 # Runtime data
 spring-api/data/
+
+# Local recordings / large evidence files
+*.mp4

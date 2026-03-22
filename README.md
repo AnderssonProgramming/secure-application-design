@@ -10,7 +10,17 @@
 ![Let's Encrypt](https://img.shields.io/badge/TLS-Let%27s%20Encrypt-003A70?logo=letsencrypt&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-Full-stack secure lab delivery with two isolated servers, HTTPS end-to-end, async client calls, and authentication with hashed passwords.
+## Secure by Design, Proven with Evidence
+
+Welcome to my final secure full-stack delivery for the Enterprise Architecture workshop.
+
+This project combines:
+
+- 🔐 End-to-end HTTPS with Let's Encrypt
+- 🧠 Secure authentication with BCrypt hashing
+- 🧱 Split architecture with two isolated EC2 servers
+- ⚡ Async frontend calls from Apache to Spring API
+- ✅ Complete evidence pack (screenshots + video)
 
 ---
 
@@ -18,46 +28,46 @@ Full-stack secure lab delivery with two isolated servers, HTTPS end-to-end, asyn
 
 1. [Project Snapshot](#project-snapshot)
 2. [Architecture at a Glance](#architecture-at-a-glance)
-3. [Live Evidence Gallery](#live-evidence-gallery)
-4. [AWS Deployment Runbook](#aws-deployment-runbook)
-5. [Implementation Flow](#implementation-flow)
+3. [Evidence Gallery](#evidence-gallery)
+4. [Video Walkthrough](#video-walkthrough)
+5. [AWS Deployment Runbook](#aws-deployment-runbook)
 6. [Security Controls](#security-controls)
-7. [Test and Validation Matrix](#test-and-validation-matrix)
+7. [Validation Matrix](#validation-matrix)
 8. [Rubric Coverage](#rubric-coverage)
-9. [Video Walkthrough Script](#video-walkthrough-script)
+9. [Repository Structure](#repository-structure)
 
 ---
 
 ## Project Snapshot
 
-| Area | What is delivered |
+| Area | Delivery |
 | --- | --- |
-| Client Tier | Apache serves an asynchronous HTML+JS client over HTTPS |
-| API Tier | Spring Boot exposes secure REST endpoints over HTTPS |
-| Identity | Register + login flow with BCrypt password hashing |
-| Transport Security | TLS certificates from Let's Encrypt on both servers |
-| Infra | Two independent EC2 instances with least-privilege security groups |
-| Delivery Assets | Complete codebase, visual README, deployment guide, screenshot plan |
+| Frontend | Apache serves async HTML/CSS/JS over HTTPS |
+| Backend | Spring Boot secure API over HTTPS |
+| Auth | Register/Login with BCrypt password verification |
+| TLS | Certificates installed on both frontend and backend |
+| Infra | 2 EC2 instances + least-privilege SG rules |
+| Evidence | All required screenshots + final video |
 
 ---
 
 ## Architecture at a Glance
 
-### Context
+### Context Diagram
 
 ```mermaid
 flowchart LR
     U[User Browser] -->|HTTPS 443| A[EC2 Apache Frontend]
-    A -->|HTML CSS JS| U
+    A -->|Static Client| U
     U -->|HTTPS 443 async fetch| S[EC2 Spring API]
     S -->|JSON| U
     S --> D[(Users DB)]
 
-    classDef secure fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
+    classDef secure fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#5d4037;
     class A,S secure;
 ```
 
-### Deployment
+### Deployment Diagram
 
 ```mermaid
 flowchart TB
@@ -66,8 +76,8 @@ flowchart TB
         SP[EC2 Spring\n22 443\napi-sg]
     end
 
-    DNS1[frontend.yourdomain.com] --> AP
-    DNS2[api.yourdomain.com] --> SP
+    DNS1[apache-ander.duckdns.org] --> AP
+    DNS2[spring-ander.duckdns.org] --> SP
     Internet((Internet)) --> AP
     Internet --> SP
 ```
@@ -82,10 +92,10 @@ sequenceDiagram
     participant S as Spring API
     participant R as User Repository
 
-    B->>A: GET /index.html over TLS
+    B->>A: GET index.html over TLS
     A-->>B: Client bundle
     B->>S: POST /api/auth/login
-    S->>R: Find by email
+    S->>R: Find user by email
     R-->>S: User + BCrypt hash
     S->>S: BCrypt.matches(raw, hash)
     alt Valid credentials
@@ -97,62 +107,79 @@ sequenceDiagram
 
 ---
 
-## Live Evidence Gallery
+## Evidence Gallery
 
-All screenshots will be stored in [images](images).
+All evidence files are in [images](images).
 
-### Required Evidence
+| # | Evidence | Description | File |
+| --- | --- | --- | --- |
+| 1 | EC2 Instances | Both frontend and backend servers running | [images/aws-01-ec2-list.png](images/aws-01-ec2-list.png) |
+| 2 | Security Groups | Inbound rules correctly configured | [images/aws-02-security-groups.png](images/aws-02-security-groups.png) |
+| 3 | DNS Records | DuckDNS records for both servers | [images/dns-01-records.png](images/dns-01-records.png) |
+| 4 | Frontend HTTPS | Apache client loaded with TLS | [images/apache-02-frontend-https.png](images/apache-02-frontend-https.png) |
+| 5 | API HTTPS Health | Public health endpoint over TLS | [images/spring-03-api-health-https.png](images/spring-03-api-health-https.png) |
+| 6 | Certbot Apache | Certificate workflow on Apache server | [images/tls-01-certbot-apache.png](images/tls-01-certbot-apache.png) |
+| 7 | Certbot Spring | Certificate workflow on Spring server | [images/tls-02-certbot-spring.png](images/tls-02-certbot-spring.png) |
+| 8 | Register Success | User registration successful | [images/auth-02-register-success.png](images/auth-02-register-success.png) |
+| 9 | Login Success | Authentication with valid credentials | [images/auth-02-login-success.png](images/auth-02-login-success.png) |
+| 10 | Login Failure | Invalid credentials correctly rejected | [images/auth-03-login-failed.png](images/auth-03-login-failed.png) |
+| 11 | BCrypt Proof | Password stored as BCrypt hash | [images/auth-04-db-password-hash.png](images/auth-04-db-password-hash.png) |
+| 12 | Protected Endpoint | Access granted with valid token | [images/api-01-protected-with-token.png](images/api-01-protected-with-token.png) |
+| 13 | Tests Passing | Maven test suite completed successfully | [images/ci-01-tests-passing.png](images/ci-01-tests-passing.png) |
 
-| Evidence | File |
-| --- | --- |
-| EC2 instances running | images/aws-01-ec2-list.png |
-| Security groups configured | images/aws-02-security-groups.png |
-| DNS records | images/dns-01-records.png |
-| Frontend over HTTPS | images/apache-02-frontend-https.png |
-| API health over HTTPS | images/spring-03-api-health-https.png |
-| Certbot Apache | images/tls-01-certbot-apache.png |
-| Certbot Spring | images/tls-02-certbot-spring.png |
-| Login success | images/auth-02-login-success.png |
-| Login failure | images/auth-03-login-failed.png |
-| BCrypt hash proof | images/auth-04-db-password-hash.png |
-| Protected endpoint | images/api-01-protected-with-token.png |
-| Test suite passing | images/ci-01-tests-passing.png |
+### Visual Highlights
 
-### Gallery Placeholders
-
-> Replace these placeholders once screenshots are captured.
+#### Frontend over TLS 🔒
 
 ![Frontend HTTPS](images/apache-02-frontend-https.png)
+
+#### API Health over TLS 💚
+
 ![API HTTPS Health](images/spring-03-api-health-https.png)
+
+#### Register/Login Flow 👤
+
+![Register Success](images/auth-02-register-success.png)
 ![Login Success](images/auth-02-login-success.png)
+![Login Failure](images/auth-03-login-failed.png)
+
+#### Token-Protected Endpoint 🛡️
+
 ![Protected Endpoint](images/api-01-protected-with-token.png)
+
+#### Test Execution ✅
+
+![Tests Passing](images/ci-01-tests-passing.png)
+
+---
+
+## Video Walkthrough
+
+The full demonstration video is included in the repository:
+
+- 🎬 [secure-application-design.mp4](secure-application-design.mp4)
+
+Video flow:
+
+1. Objective and architecture boundaries
+2. AWS resources and security groups
+3. Frontend over HTTPS
+4. API over HTTPS
+5. Register/Login success and failure
+6. BCrypt evidence in storage
+7. Protected endpoint behavior
+8. Certbot dry-run and tests
+9. Rubric mapping and close
 
 ---
 
 ## AWS Deployment Runbook
 
-Use the dedicated deployment guide:
+Detailed deployment instructions are available in:
 
 - [AWS_DEPLOYMENT_GUIDE.md](AWS_DEPLOYMENT_GUIDE.md)
 
-This guide includes:
-
-1. Prerequisites checklist
-2. Exact execution order
-3. Copy-paste commands for Apache and Spring servers
-4. TLS issuance and PKCS12 conversion
-5. Validation commands and screenshot checkpoints
-
----
-
-## Implementation Flow
-
-1. Launch and secure two EC2 instances.
-2. Configure DNS records for frontend and API domains.
-3. Deploy Apache client and enforce HTTPS.
-4. Deploy Spring API and configure TLS in production profile.
-5. Validate auth flow, protected routes, and CORS policy.
-6. Execute test suite and capture evidence.
+The runbook includes prerequisites, exact commands, TLS setup, renewal flow, and troubleshooting.
 
 ---
 
@@ -160,24 +187,25 @@ This guide includes:
 
 | Control | Implementation |
 | --- | --- |
-| Data in transit | HTTPS/TLS for frontend and API |
-| Credential security | BCrypt hash storage, no plaintext passwords |
-| Access control | Token-protected endpoints |
-| Network hardening | Separate SGs and restricted ingress |
-| Certificate lifecycle | Let's Encrypt issuance and renewal script |
-| Configuration hygiene | Runtime config through environment variables |
+| Data in transit | HTTPS/TLS on frontend and backend |
+| Credential protection | BCrypt password hashing |
+| Access control | Token-protected secure endpoints |
+| Network hardening | Isolated SG rules per server role |
+| Certificate lifecycle | Let's Encrypt + renewal script |
+| Config hygiene | Environment-driven secure runtime config |
 
 ---
 
-## Test and Validation Matrix
+## Validation Matrix
 
-| Test | Expected result |
+| Test | Expected Result |
 | --- | --- |
-| GET frontend over HTTPS | 200 and valid TLS certificate |
+| GET frontend over HTTPS | 200 and valid certificate |
+| GET /api/public/health | 200 and JSON status UP |
 | POST /api/auth/register | 201 and token issued |
-| POST /api/auth/login valid | 200 and token issued |
-| POST /api/auth/login invalid | 401 Unauthorized |
-| GET /api/secure/me with token | 200 and user profile |
+| POST /api/auth/login (valid) | 200 and token issued |
+| POST /api/auth/login (invalid) | 401 Unauthorized |
+| GET /api/secure/me with token | 200 and profile payload |
 | GET /api/secure/me without token | 401 or 403 |
 | certbot renew --dry-run | Success |
 | mvn test | BUILD SUCCESS |
@@ -188,33 +216,19 @@ This guide includes:
 
 ### Class Work
 
-- Two-server AWS deployment completed.
-- Apache and Spring configured independently.
-- TLS configured for client download and API requests.
-- Login security implemented with hashed password storage.
-- Let's Encrypt certificates installed on both servers.
-- Complete repository with code and documentation.
+- ✅ Two-server AWS deployment completed
+- ✅ Apache and Spring configured independently
+- ✅ TLS for frontend and API communication
+- ✅ Secure login with hashed password storage
+- ✅ Let's Encrypt certificates active in both tiers
+- ✅ Full repository delivery with proof artifacts
 
 ### Homework
 
-- Detailed architecture and secure design documented.
-- Correct relationship between Apache, Spring, and async client explained.
-- Working secure implementation demonstrated.
-- Final assets include README, screenshots, and video.
-
----
-
-## Video Walkthrough Script
-
-1. Introduce objective and architecture boundaries.
-2. Show AWS resources and security groups.
-3. Demonstrate frontend over HTTPS.
-4. Demonstrate API over HTTPS.
-5. Show register/login success and failure.
-6. Show BCrypt hash evidence in storage.
-7. Show protected endpoint behavior with and without token.
-8. Run certbot dry-run and tests.
-9. Close with rubric mapping.
+- ✅ Architecture and secure design clearly documented
+- ✅ Correct Apache-Spring-async client interaction
+- ✅ Working secure implementation demonstrated
+- ✅ Final assets include README, screenshots, and video
 
 ---
 
@@ -224,9 +238,23 @@ This guide includes:
 secure-application-design/
 ├── README.md
 ├── AWS_DEPLOYMENT_GUIDE.md
+├── secure-application-design.mp4
 ├── LICENSE
 ├── .gitignore
-├── images/                         # screenshot evidence (you will add files)
+├── images/
+│   ├── aws-01-ec2-list.png
+│   ├── aws-02-security-groups.png
+│   ├── dns-01-records.png
+│   ├── apache-02-frontend-https.png
+│   ├── spring-03-api-health-https.png
+│   ├── tls-01-certbot-apache.png
+│   ├── tls-02-certbot-spring.png
+│   ├── auth-02-register-success.png
+│   ├── auth-02-login-success.png
+│   ├── auth-03-login-failed.png
+│   ├── auth-04-db-password-hash.png
+│   ├── api-01-protected-with-token.png
+│   └── ci-01-tests-passing.png
 ├── apache-client/
 ├── spring-api/
 └── scripts/
@@ -243,4 +271,4 @@ secure-application-design/
 
 ## License
 
-This project is licensed under the MIT License. You can find it here [LICENSE](LICENSE)
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
