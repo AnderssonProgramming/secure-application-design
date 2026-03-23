@@ -157,7 +157,7 @@ All evidence files are in [images](images).
 
 The full demonstration video is included in the repository:
 
-- 🎬 [secure-application-design.mp4](secure-application-design.mp4)
+- 🎬 [secure-application-design.mp4](https://youtu.be/Y3e6ZtWets8)
 
 Video flow:
 
